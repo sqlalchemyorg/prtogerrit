@@ -1,12 +1,14 @@
 # place this file in $HOME/.prtogerrit.config
 
 [myproject_github]
+gerrit=https://gerrit.myproject.com/
 service=github
 repo=myusername/myproject
 username=myusername
 password=foobar
 
 [myproject_bitbucket]
+gerrit=https://gerrit.myproject.com/
 service=bitbucket
 repo=myusername/myproject
 username=myusername

@@ -18,9 +18,9 @@ def fetch_branch(repo, branch):
     run_command_status("git", "pull", repo, branch)
 
 
-def push_to_gerrit():
+def push_to_gerrit(gerrit):
     output = run_command_status("git", "review", "-R")
-    pr_link = re.search(r'https://gerrit.sqlalchemy.org/\S+', output, re.S)
+    pr_link = re.search(r'%s\S+' % gerrit, output, re.S)
     if pr_link:
         return pr_link.group(0)
     else:
@@ -51,7 +51,7 @@ def run_command_status(*argv, **kwargs):
     return out.strip()
 
 
-def prtogerrit(service, repo, number, username, password):
+def prtogerrit(gerrit, service, repo, number, username, password):
     if service == "github":
         client = ghclient.GitHub(repo, username, password)
     elif service == "bitbucket":
@@ -66,12 +66,15 @@ def prtogerrit(service, repo, number, username, password):
 
     fetch_branch(pr_info['repo'], pr_info["branch"])
 
-    review_num = push_to_gerrit()
+    review_num = push_to_gerrit(gerrit)
 
     comment = "This pull request has been transferred to Gerrit,"\
         " at %s.  Please register at "\
-        "https://gerrit.sqlalchemy.org/#/register/"\
-        " to send and receive comments regarding this item." % review_num
+        "%s#/register/"\
+        " to send and receive comments regarding this item." % (
+            gerrit,
+            review_num
+        )
 
     client.close_pullrequest(number, comment)
 
@@ -93,13 +96,14 @@ def main(argv=None):
     print "ConfigfILE: ", configfile
     config.read([configfile])
 
+    gerrit = config.get(options.name, "gerrit")
     service = config.get(options.name, "service")
     repo = config.get(options.name, "repo")
     username = config.get(options.name, "username")
     password = config.get(options.name, "password")
 
     prtogerrit(
-        service, repo, options.number,
+        gerrit, service, repo, options.number,
         username, password)
 
 
