@@ -4,7 +4,7 @@ from .clientbase import ClientBase
 class BitBucket(ClientBase):
 
     def __init__(self, repo, username, password):
-        self.base_url = "https://api.bitbucket.org/2.0/"
+        self.base_url = "https://api.bitbucket.org/"
         super(BitBucket, self).__init__(repo, username, password)
 
     def get_pullrequest(self, pr_number):

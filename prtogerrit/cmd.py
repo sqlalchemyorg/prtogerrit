@@ -72,8 +72,8 @@ def prtogerrit(gerrit, service, repo, number, username, password):
         " at %s.  Please register at "\
         "%s#/register/"\
         " to send and receive comments regarding this item." % (
+            review_num,
             gerrit,
-            review_num
         )
 
     client.close_pullrequest(number, comment)
