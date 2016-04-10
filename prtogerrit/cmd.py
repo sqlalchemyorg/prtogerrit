@@ -79,16 +79,28 @@ def prtogerrit(service, repo, number, username, password):
 def main(argv=None):
     parser = ArgumentParser(prog="prtogerrit")
     parser.add_argument(
-        "service", choices=["github", "bitbucket"], help="service")
-    parser.add_argument("repo")
+        "name", help="config name")
     parser.add_argument("number", type=int, help="pr number")
-    parser.add_argument("-u", "--username", help="username")
-    parser.add_argument("-p", "--password", help="password")
+    parser.add_argument("--config", help="path to config file")
+
     options = parser.parse_args(argv)
 
+    from os.path import expanduser
+    import ConfigParser
+    configfile = options.config or expanduser("~/.prtogerrit.config")
+
+    config = ConfigParser.ConfigParser()
+    print "ConfigfILE: ", configfile
+    config.read([configfile])
+
+    service = config.get(options.name, "service")
+    repo = config.get(options.name, "repo")
+    username = config.get(options.name, "username")
+    password = config.get(options.name, "password")
+
     prtogerrit(
-        options.service, options.repo, options.number,
-        options.username, options.password)
+        service, repo, options.number,
+        username, password)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,13 @@
+# place this file in $HOME/.prtogerrit.config
+
+[myproject_github]
+service=github
+repo=myusername/myproject
+username=myusername
+password=foobar
+
+[myproject_bitbucket]
+service=bitbucket
+repo=myusername/myproject
+username=myusername
+password=foobar
