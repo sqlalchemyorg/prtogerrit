@@ -9,7 +9,7 @@ class BitBucket(ClientBase):
 
     def get_pullrequest(self, pr_number):
         pr = self._get(
-            "/repositories%s/pullrequests/%s" % (
+            "/2.0/repositories%s/pullrequests/%s" % (
                 self.repo,
                 pr_number
             )
@@ -25,7 +25,16 @@ class BitBucket(ClientBase):
 
     def close_pullrequest(self, pr_number, comment):
         self._post(
-            "/repositories%s/pullrequests/%s/decline" % (
+            "/1.0/repositories%s/pullrequests/%s/comments" % (
+                self.repo,
+                pr_number
+            ),
+            data={
+                "content": comment
+            }
+        )
+        self._post(
+            "/2.0/repositories%s/pullrequests/%s/decline" % (
                 self.repo,
                 pr_number
             ),
