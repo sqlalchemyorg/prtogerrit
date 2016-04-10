@@ -20,7 +20,10 @@ class BitBucket(ClientBase):
 
         return {
             "repo": "https://bitbucket.org/%s" % repo,
-            "branch": branch
+            "branch": branch,
+            "title": pr["title"],
+            "description": pr["description"],
+            "html_url": pr["links"]["html"]
         }
 
     def close_pullrequest(self, pr_number, comment):

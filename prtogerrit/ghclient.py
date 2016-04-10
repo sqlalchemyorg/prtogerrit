@@ -20,7 +20,10 @@ class GitHub(ClientBase):
 
         return {
             "repo": repo,
-            "branch": branch
+            "branch": branch,
+            "title": pr["title"],
+            "description": pr["body"],
+            "html_url": pr["html_url"]
         }
 
     def close_pullrequest(self, pr_number, comment):

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import requests
 from requests.auth import HTTPBasicAuth
 import posixpath
