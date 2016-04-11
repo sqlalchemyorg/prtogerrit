@@ -66,7 +66,8 @@ def run_command_status(*argv, **kwargs):
     return out.strip()
 
 
-def prtogerrit(gerrit, service, repo, number, username, password, continue_, dryrun):
+def prtogerrit(
+        gerrit, service, repo, number, username, password, continue_, dryrun):
     if service == "github":
         client = ghclient.GitHub(repo, username, password)
     elif service == "bitbucket":
@@ -107,15 +108,23 @@ def prtogerrit(gerrit, service, repo, number, username, password, continue_, dry
 
     review_num = push_to_gerrit(gerrit)
 
-    comment = "This pull request has been transferred to Gerrit,"\
-        " at %s.  Please register at "\
-        "%s#/register/"\
+    comment = (
+        "Dear contributor -\n\n"
+        "This pull request is being moved to Gerrit, at %s, where it "
+        "may be tested and reviewed more closely.  As such, the pull "
+        "request itself is being marked \"closed\" or \"declined\", "
+        "however your "
+        "contribution is merely being moved to our central review system. "
+        "Please register at "
+        "%s#/register/"
         " to send and receive comments regarding this item." % (
             review_num,
             gerrit,
         )
+    )
     print(comment)
     client.close_pullrequest(number, comment)
+    run_command_status("git", "checkout", "master")
 
 
 def main(argv=None):

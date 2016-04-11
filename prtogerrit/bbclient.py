@@ -23,7 +23,7 @@ class BitBucket(ClientBase):
             "branch": branch,
             "title": pr["title"],
             "description": pr["description"],
-            "html_url": pr["links"]["html"]
+            "html_url": pr["links"]["html"]["href"]
         }
 
     def close_pullrequest(self, pr_number, comment):
