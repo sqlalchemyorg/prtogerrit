@@ -96,7 +96,7 @@ def prtogerrit(
     with open(".git/SQUASH_MSG") as f:
         for line in f:
             if line.startswith("Author:"):
-                author = line[8:]
+                author = line[8:].decode('utf-8')
                 break
         else:
             raise Exception("could not determine author for PR.")
