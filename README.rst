@@ -13,7 +13,9 @@ the `git-review <http://docs.openstack.org/infra/git-review/>`_ tool installed l
 Installation
 ------------
 
-pip install prtogerrit
+::
+
+	pip install prtogerrit
 
 Configuration
 -------------
