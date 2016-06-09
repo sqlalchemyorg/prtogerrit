@@ -2,6 +2,7 @@ from .clientbase import ClientBase
 
 
 class GitHub(ClientBase):
+    service = 'github'
 
     def __init__(self, repo, username, password):
         self.base_url = "https://api.github.com/"

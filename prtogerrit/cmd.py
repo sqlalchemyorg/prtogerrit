@@ -67,25 +67,19 @@ def run_command_status(*argv, **kwargs):
 
 
 def prtogerrit(
-        gerrit, service, repo, number, username, password, continue_, dryrun):
-    if service == "github":
-        client = ghclient.GitHub(repo, username, password)
-    elif service == "bitbucket":
-        client = bbclient.BitBucket(repo, username, password)
-    else:
-        assert False
+        gerrit, client, number, continue_, dryrun):
 
     pr_info = client.get_pullrequest(number)
 
     if not continue_:
         # TODO: from non-master?
-        create_branch(service, number)
+        create_branch(client.service, number)
 
         # this step will fail if the merge fails.  user will
         # correct and run w/ --continue
         fetch_branch(pr_info['repo'], pr_info["branch"])
     else:
-        assert_branch(service, number)
+        assert_branch(client.service, number)
 
     commit_msg = "%s\n\n%s\n\nPull-request: %s" % (
         pr_info["title"],
@@ -93,6 +87,7 @@ def prtogerrit(
         pr_info["html_url"]
     )
     author = None
+
     with open(".git/SQUASH_MSG") as f:
         for line in f:
             if line.startswith("Author:"):
@@ -106,6 +101,10 @@ def prtogerrit(
     if dryrun:
         sys.exit("exiting for dry run")
 
+    push_only(gerrit, client, number)
+
+
+def push_only(gerrit, client, number):
     review_num = push_to_gerrit(gerrit)
 
     comment = (
@@ -142,6 +141,9 @@ def main(argv=None):
         help="Merge the branch from the PR locally but don't push "
         "to gerrit or close the PR."
     )
+    parser.add_argument(
+        "--push-only", action="store_true",
+        help="Assume the commit is ready; push to gerrit and close PR only")
     options = parser.parse_args(argv)
 
     from os.path import expanduser
@@ -158,9 +160,19 @@ def main(argv=None):
     username = config.get(options.name, "username")
     password = config.get(options.name, "password")
 
-    prtogerrit(
-        gerrit, service, repo, options.number,
-        username, password, options.continue_, options.dryrun)
+    if service == "github":
+        client = ghclient.GitHub(repo, username, password)
+    elif service == "bitbucket":
+        client = bbclient.BitBucket(repo, username, password)
+    else:
+        assert False
+
+    if options.push_only:
+        push_only(gerrit, client, options.number)
+    else:
+        prtogerrit(
+            gerrit, client, options.number,
+            options.continue_, options.dryrun)
 
 
 if __name__ == '__main__':

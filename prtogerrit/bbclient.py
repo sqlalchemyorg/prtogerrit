@@ -2,6 +2,7 @@ from .clientbase import ClientBase
 
 
 class BitBucket(ClientBase):
+    service = 'bitbucket'
 
     def __init__(self, repo, username, password):
         self.base_url = "https://api.bitbucket.org/"
