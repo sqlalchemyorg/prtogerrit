@@ -32,6 +32,10 @@ def commit_branch(comment, author):
     run_command_status("git", "commit", "--author", author, "-m", comment)
 
 
+def refresh_gerrit(gerrit):
+    run_command_status("git", "fetch", "gerrit")
+
+
 def push_to_gerrit(gerrit):
     output = run_command_status("git", "review", "-R")
     pr_link = re.search(r'%s\S+' % gerrit, output, re.S)
@@ -105,6 +109,8 @@ def prtogerrit(
 
 
 def push_only(gerrit, client, number):
+    refresh_gerrit(gerrit)
+
     review_num = push_to_gerrit(gerrit)
 
     comment = (
