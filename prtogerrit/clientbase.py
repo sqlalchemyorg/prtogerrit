@@ -2,9 +2,9 @@ from __future__ import print_function
 import requests
 from requests.auth import HTTPBasicAuth
 import posixpath
-from StringIO import StringIO
 import json
 import time
+import sys
 
 
 class ClientBase(object):
@@ -87,7 +87,7 @@ class ClientBase(object):
         return posixpath.join(self.base_url, path)
 
     def _output(self, msg):
-        if isinstance(msg, unicode):
+        if sys.version_info < (3,) and isinstance(msg, unicode):
             msg = msg.encode('ascii', errors='ignore')
         print(msg)
 

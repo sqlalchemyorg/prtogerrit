@@ -95,7 +95,9 @@ def prtogerrit(
     with open(".git/SQUASH_MSG") as f:
         for line in f:
             if line.startswith("Author:"):
-                author = line[8:].decode('utf-8')
+                author = line[8:]
+                if sys.version_info < (3,) and isinstance(author, str):
+                    author = author.decode('utf-8')
                 break
         else:
             raise Exception("could not determine author for PR.")
@@ -153,10 +155,16 @@ def main(argv=None):
     options = parser.parse_args(argv)
 
     from os.path import expanduser
-    import ConfigParser
+
+    try:
+        import ConfigParser
+        config = ConfigParser.ConfigParser()
+    except ImportError:
+        import configparser as ConfigParser
+        config = ConfigParser.ConfigParser(interpolation=None)
+
     configfile = options.config or expanduser("~/.prtogerrit.config")
 
-    config = ConfigParser.ConfigParser()
     print("Using config: ", configfile)
     config.read([configfile])
 
