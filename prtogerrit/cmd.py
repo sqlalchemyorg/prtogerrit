@@ -171,12 +171,13 @@ def main(argv=None):
     gerrit = config.get(options.name, "gerrit")
     service = config.get(options.name, "service")
     repo = config.get(options.name, "repo")
-    username = config.get(options.name, "username")
-    password = config.get(options.name, "password")
 
     if service == "github":
-        client = ghclient.GitHub(repo, username, password)
+        access_token = config.get(options.name, "access_token")
+        client = ghclient.GitHub(repo, access_token)
     elif service == "bitbucket":
+        username = config.get(options.name, "username")
+        password = config.get(options.name, "password")
         client = bbclient.BitBucket(repo, username, password)
     else:
         assert False

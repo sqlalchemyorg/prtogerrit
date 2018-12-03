@@ -4,9 +4,10 @@ from .clientbase import ClientBase
 class GitHub(ClientBase):
     service = 'github'
 
-    def __init__(self, repo, username, password):
+    def __init__(self, repo, access_token):
         self.base_url = "https://api.github.com/"
-        super(GitHub, self).__init__(repo, username, password)
+        self.access_token = access_token
+        super(GitHub, self).__init__(repo)
 
     def get_pullrequest(self, pr_number):
 

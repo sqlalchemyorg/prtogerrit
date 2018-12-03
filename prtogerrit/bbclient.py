@@ -6,7 +6,9 @@ class BitBucket(ClientBase):
 
     def __init__(self, repo, username, password):
         self.base_url = "https://api.bitbucket.org/"
-        super(BitBucket, self).__init__(repo, username, password)
+        self.username = username
+        self.password = password
+        super(BitBucket, self).__init__(repo)
 
     def get_pullrequest(self, pr_number):
         pr = self._get(

@@ -22,7 +22,8 @@ Configuration
 
 Create a new file ${HOME}/.prtogerrit.config.  In it, place instructions
 as to where your git repositories are, and into what part of your gerrit
-server you'd like them to go::
+server you'd like them to go.  For github specify a personal access token
+that you can get from settings->developer settings->personal access tokens::
 
 	# place this file in $HOME/.prtogerrit.config
 
@@ -30,8 +31,7 @@ server you'd like them to go::
 	gerrit=https://gerrit.myproject.com/
 	service=github
 	repo=myusername/myproject
-	username=myusername
-	password=foobar
+	access_token=abcdefgabcdefgabcdefgabcdefg1234567890
 
 	[myproject_bitbucket]
 	gerrit=https://gerrit.myproject.com/

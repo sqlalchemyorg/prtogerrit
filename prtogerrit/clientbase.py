@@ -8,9 +8,9 @@ import sys
 
 
 class ClientBase(object):
-    def __init__(self, repo, username, password):
-        self.username = username
-        self.password = password
+    username = password = access_token = None
+
+    def __init__(self, repo):
         self.repo = repo
         if not self.repo.startswith("/"):
             self.repo = "/" + self.repo
@@ -36,43 +36,73 @@ class ClientBase(object):
         url = self._url(path)
         if self.log_requests:
             self._output("GET %s" % url)
+        if self.access_token:
+            if not headers:
+                headers = {}
+            headers["Authorization"] = "token %s" % self.access_token
+            auth = None
+        else:
+            auth = (self.username, self.password)
+
         return self._with_retries(
             requests.get,
             url, headers=headers,
-            auth=HTTPBasicAuth(self.username, self.password)
+            auth=auth
         )
 
     def _put(self, path, data=None, headers=None):
         url = self._url(path)
         if self.log_requests:
             self._output("PUT %s" % url)
+        if self.access_token:
+            if not headers:
+                headers = {}
+            headers["Authorization"] = "token %s" % self.access_token
+            auth = None
+        else:
+            auth = (self.username, self.password)
+
         return self._with_retries(
             requests.put,
             url, data=data,
             headers=headers,
-            auth=HTTPBasicAuth(self.username, self.password)
+            auth=auth
         )
 
     def _post(self, path, data=None, headers=None, as_json=False):
         url = self._url(path)
         if self.log_requests:
             self._output("POST %s" % url)
+        if self.access_token:
+            if not headers:
+                headers = {}
+            headers["Authorization"] = "token %s" % self.access_token
+            auth = None
+        else:
+            auth = (self.username, self.password)
         return self._with_retries(
             requests.post,
             url, data=json.dumps(data) if as_json else data,
             headers=headers,
-            auth=HTTPBasicAuth(self.username, self.password)
+            auth=auth
         )
 
     def _patch(self, path, data=None, headers=None, as_json=False):
         url = self._url(path)
         if self.log_requests:
             self._output("PATCH %s" % url)
+        if self.access_token:
+            if not headers:
+                headers = {}
+            headers["Authorization"] = "token %s" % self.access_token
+            auth = None
+        else:
+            auth = (self.username, self.password)
         return self._with_retries(
             requests.patch,
             url, data=json.dumps(data) if as_json else data,
             headers=headers,
-            auth=HTTPBasicAuth(self.username, self.password)
+            auth=auth
         )
 
     def _url(self, path):
